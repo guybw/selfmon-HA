@@ -128,12 +128,8 @@ To reconfigure sensors after initial setup:
 For issues related to:
 - **This integration**: Open an issue on the GitHub repository
 - **SelfMon VMOD**: Visit [selfmon.uk](http://www.selfmon.uk)
-- **Galaxy alarm panels**: Contact Honeywell support
+
 
 ## License
 
 This integration is provided as-is for personal use with your own alarm system.
-
-## Custom Icon
-
-To add a custom icon for this integration, place a `icon.png` (256x256 recommended) or `icon@2x.png` file in the `custom_components/selfmon/` folder. The integration will use the Honeywell branding by default if available through Home Assistant's brand repository.
