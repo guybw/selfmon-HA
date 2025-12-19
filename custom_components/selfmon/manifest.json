@@ -1,0 +1,12 @@
+{
+  "domain": "selfmon",
+  "name": "Honeywell Galaxy Alarm",
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": ["mqtt"],
+  "documentation": "https://github.com/your-repo/selfmon",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/your-repo/selfmon/issues",
+  "requirements": [],
+  "version": "1.2.2"
+}

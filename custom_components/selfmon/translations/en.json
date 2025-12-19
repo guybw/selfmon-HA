@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Discovering Galaxy Alarm Modules",
+        "description": "Searching for SelfMon VMOD modules on your MQTT broker..."
+      },
+      "select_module": {
+        "title": "Select Module",
+        "description": "Multiple modules found. Select the module to configure:",
+        "data": {
+          "module_path": "Module"
+        }
+      },
+      "manual_entry": {
+        "title": "Enter Module Path",
+        "description": "Enter the full MQTT module path for your SelfMon Virtual Module (e.g., selfmon/vmod.010aa1)",
+        "data": {
+          "module_path": "Module Path"
+        }
+      },
+      "output_config": {
+        "title": "Output Sensors",
+        "description": "Module: {module_path}\n\nWould you like to configure output sensors (Siren, Intruder, Fire, Set status)?",
+        "data": {
+          "enable_outputs": "Enable output sensors"
+        }
+      },
+      "discover": {
+        "title": "Discovering Sensors",
+        "description": "Searching for sensors on your Galaxy Alarm system...\n\nPlease wait while we discover available sensors."
+      },
+      "sensor_config": {
+        "title": "Configure Sensor: {sensor_id}",
+        "description": "Sensor {sensor_num} of {total_sensors}\nTopic: {topic}",
+        "data": {
+          "enabled": "Enable this sensor",
+          "name": "Sensor Name",
+          "device_class": "Device Class"
+        }
+      }
+    },
+    "error": {
+      "invalid_path": "Invalid module path. Must match format: selfmon/vmod.XXXXXX",
+      "mqtt_not_configured": "MQTT integration is not configured. Please set up MQTT first.",
+      "no_sensors_found": "No sensors discovered. Check that your module is online and publishing to MQTT.",
+      "no_modules_found": "No modules found automatically. Please enter the module path manually.",
+      "discovery_timeout": "Discovery timed out. Please check your MQTT connection and module status."
+    },
+    "abort": {
+      "already_configured": "This module is already configured.",
+      "mqtt_not_available": "MQTT integration is not available."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Galaxy Alarm Options",
+        "description": "Reconfigure your Galaxy Alarm sensors",
+        "data": {
+          "reconfigure": "Reconfigure sensors"
+        }
+      },
+      "sensor_config": {
+        "title": "Configure Sensor: {sensor_id}",
+        "description": "Modify sensor configuration",
+        "data": {
+          "enabled": "Enable this sensor",
+          "name": "Sensor Name",
+          "device_class": "Device Class"
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "zone": {
+        "name": "Zone {zone_id}"
+      }
+    },
+    "sensor": {
+      "output": {
+        "name": "Output {output_id}"
+      },
+      "temperature": {
+        "name": "Temperature"
+      },
+      "vkp_line1": {
+        "name": "Keypad Line 1"
+      },
+      "vkp_line2": {
+        "name": "Keypad Line 2"
+      },
+      "version": {
+        "name": "Version"
+      }
+    }
+  }
+}
