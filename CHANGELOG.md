@@ -2,6 +2,12 @@
 
 All notable changes to this integration are documented in this file.
 
+## [1.2.4] - 2026-09-05
+
+### Fixed
+
+- Refined the 1.2.3 unique_id fix: the `prio`/`vrio` bus is now only folded into a zone-input or output entity's `unique_id` when its zone/output number actually collides between the two buses. Every other zone-input/output entity keeps its original `unique_id` (and therefore its existing `entity_id` and history) unchanged.
+
 ## [1.2.3] - 2026-09-05
 
 ### Fixed

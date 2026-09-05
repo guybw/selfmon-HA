@@ -48,6 +48,15 @@ async def async_setup_entry(
 
     entities = []
 
+    output_zone_counts: dict[str, int] = {}
+    for sensor_data in sensors_config.values():
+        if (
+            sensor_data.get(CONF_SENSOR_ENABLED, True)
+            and sensor_data.get(CONF_SENSOR_TYPE) == SENSOR_TYPE_OUTPUT
+        ):
+            zone_id = sensor_data.get(CONF_SENSOR_ZONE_ID, "")
+            output_zone_counts[zone_id] = output_zone_counts.get(zone_id, 0) + 1
+
     for sensor_key, sensor_data in sensors_config.items():
         if not sensor_data.get(CONF_SENSOR_ENABLED, True):
             continue
@@ -55,12 +64,14 @@ async def async_setup_entry(
         sensor_type = sensor_data.get(CONF_SENSOR_TYPE)
 
         if sensor_type == SENSOR_TYPE_OUTPUT:
+            zone_id = sensor_data.get(CONF_SENSOR_ZONE_ID, "")
             entities.append(
                 SelfMonOutputSensor(
                     module_path=module_path,
                     sensor_key=sensor_key,
                     sensor_config=sensor_data,
                     entry_id=config_entry.entry_id,
+                    disambiguate=output_zone_counts.get(zone_id, 0) > 1,
                 )
             )
         elif sensor_type == SENSOR_TYPE_TEMPERATURE:
@@ -144,13 +155,19 @@ class SelfMonOutputSensor(SelfMonBaseSensor):
         sensor_key: str,
         sensor_config: dict[str, Any],
         entry_id: str,
+        disambiguate: bool = False,
     ) -> None:
         """Initialize the output sensor."""
         super().__init__(module_path, sensor_key, sensor_config, entry_id)
 
         module_id = module_path.split(".")[-1] if "." in module_path else module_path
-        bus = "prio" if sensor_config.get("is_prio", True) else "vrio"
-        self._attr_unique_id = f"selfmon_{module_id}_output_{bus}_{self._zone_id}"
+        if disambiguate:
+            # Same output number exists on both the prio and vrio buses -
+            # fold the bus into the id so the two don't collide.
+            bus = "prio" if sensor_config.get("is_prio", True) else "vrio"
+            self._attr_unique_id = f"selfmon_{module_id}_output_{bus}_{self._zone_id}"
+        else:
+            self._attr_unique_id = f"selfmon_{module_id}_output_{self._zone_id}"
         self._attr_name = sensor_config.get(CONF_SENSOR_NAME, f"Output {self._zone_id}")
 
     async def async_added_to_hass(self) -> None:

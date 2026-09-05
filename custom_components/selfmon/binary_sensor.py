@@ -56,6 +56,15 @@ async def async_setup_entry(
 
     entities = []
 
+    zone_id_counts: dict[str, int] = {}
+    for sensor_data in sensors_config.values():
+        if (
+            sensor_data.get(CONF_SENSOR_ENABLED, True)
+            and sensor_data.get(CONF_SENSOR_TYPE) == SENSOR_TYPE_ZONE_INPUT
+        ):
+            zone_id = sensor_data.get(CONF_SENSOR_ZONE_ID, "")
+            zone_id_counts[zone_id] = zone_id_counts.get(zone_id, 0) + 1
+
     for sensor_key, sensor_data in sensors_config.items():
         if not sensor_data.get(CONF_SENSOR_ENABLED, True):
             continue
@@ -63,12 +72,14 @@ async def async_setup_entry(
         sensor_type = sensor_data.get(CONF_SENSOR_TYPE)
 
         if sensor_type == SENSOR_TYPE_ZONE_INPUT:
+            zone_id = sensor_data.get(CONF_SENSOR_ZONE_ID, "")
             entities.append(
                 SelfMonZoneSensor(
                     module_path=module_path,
                     sensor_key=sensor_key,
                     sensor_config=sensor_data,
                     entry_id=config_entry.entry_id,
+                    disambiguate=zone_id_counts.get(zone_id, 0) > 1,
                 )
             )
 
@@ -87,6 +98,7 @@ class SelfMonZoneSensor(BinarySensorEntity):
         sensor_key: str,
         sensor_config: dict[str, Any],
         entry_id: str,
+        disambiguate: bool = False,
     ) -> None:
         """Initialize the zone sensor."""
         self._module_path = module_path
@@ -98,8 +110,13 @@ class SelfMonZoneSensor(BinarySensorEntity):
         self._topic = sensor_config.get("topic", sensor_key)
 
         module_id = module_path.split(".")[-1] if "." in module_path else module_path
-        bus = "prio" if sensor_config.get("is_prio", True) else "vrio"
-        self._attr_unique_id = f"selfmon_{module_id}_zone_{bus}_{self._zone_id}"
+        if disambiguate:
+            # Same zone number exists on both the prio and vrio buses -
+            # fold the bus into the id so the two don't collide.
+            bus = "prio" if sensor_config.get("is_prio", True) else "vrio"
+            self._attr_unique_id = f"selfmon_{module_id}_zone_{bus}_{self._zone_id}"
+        else:
+            self._attr_unique_id = f"selfmon_{module_id}_zone_{self._zone_id}"
 
         self._attr_name = sensor_config.get(CONF_SENSOR_NAME, f"Zone {self._zone_id}")
 
