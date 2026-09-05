@@ -149,7 +149,8 @@ class SelfMonOutputSensor(SelfMonBaseSensor):
         super().__init__(module_path, sensor_key, sensor_config, entry_id)
 
         module_id = module_path.split(".")[-1] if "." in module_path else module_path
-        self._attr_unique_id = f"selfmon_{module_id}_output_{self._zone_id}"
+        bus = "prio" if sensor_config.get("is_prio", True) else "vrio"
+        self._attr_unique_id = f"selfmon_{module_id}_output_{bus}_{self._zone_id}"
         self._attr_name = sensor_config.get(CONF_SENSOR_NAME, f"Output {self._zone_id}")
 
     async def async_added_to_hass(self) -> None:

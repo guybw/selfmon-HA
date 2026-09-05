@@ -98,7 +98,8 @@ class SelfMonZoneSensor(BinarySensorEntity):
         self._topic = sensor_config.get("topic", sensor_key)
 
         module_id = module_path.split(".")[-1] if "." in module_path else module_path
-        self._attr_unique_id = f"selfmon_{module_id}_zone_{self._zone_id}"
+        bus = "prio" if sensor_config.get("is_prio", True) else "vrio"
+        self._attr_unique_id = f"selfmon_{module_id}_zone_{bus}_{self._zone_id}"
 
         self._attr_name = sensor_config.get(CONF_SENSOR_NAME, f"Zone {self._zone_id}")
 
