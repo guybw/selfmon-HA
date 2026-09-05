@@ -4,9 +4,9 @@
   "codeowners": [],
   "config_flow": true,
   "dependencies": ["mqtt"],
-  "documentation": "https://github.com/your-repo/selfmon",
+  "documentation": "https://github.com/guybw/selfmon-HA",
   "iot_class": "local_push",
-  "issue_tracker": "https://github.com/your-repo/selfmon/issues",
+  "issue_tracker": "https://github.com/guybw/selfmon-HA/issues",
   "requirements": [],
-  "version": "1.2.4"
+  "version": "1.2.5"
 }

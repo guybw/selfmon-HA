@@ -2,6 +2,12 @@
 
 All notable changes to this integration are documented in this file.
 
+## [1.2.5] - 2026-09-05
+
+### Fixed
+
+- `manifest.json` `documentation` and `issue_tracker` URLs pointed to a placeholder repo (`your-repo/selfmon`) instead of this repo.
+
 ## [1.2.4] - 2026-09-05
 
 ### Fixed
